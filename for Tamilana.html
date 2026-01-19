@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Валентинка 💖</title>
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+.card {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  z-index: 10;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+h1 {
+  color: #ff4d6d;
+  margin-bottom: 25px;
+}
+
+button {
+  padding: 15px 30px;
+  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin: 10px;
+}
+
+#yes {
+  background: #ff4d6d;
+  color: white;
+}
+
+#no {
+  background: #ddd;
+  position: absolute;
+}
+
+.text {
+  position: absolute;
+  font-size: 22px;
+  color: white;
+  animation: fadeUp 2.5s ease forwards;
+  text-align: center;
+}
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(-20px); }
+}
+
+.heart {
+  position: absolute;
+  animation: float linear infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-100vh); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <h1>Ты будешь моей валентинкой? 💕</h1>
+  <button id="yes">Да ❤️</button>
+  <button id="no">Нет 🙄</button>
+</div>
+
+<!-- Музыка -->
+<audio id="bgMusic" src="https://www.dropbox.com/s/fcazi14of2n9mjs2lpewn/girl-in-red-we-fell-in-love-in-october.mp3?raw=1" loop></audio>
+
+<script>
+const noBtn = document.getElementById('no');
+const yesBtn = document.getElementById('yes');
+const card = document.getElementById('card');
+
+// Кнопка "Нет" убегает
+function moveNoButton() {
+  const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+  const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+  noBtn.style.left = Math.random() * maxX + 'px';
+  noBtn.style.top  = Math.random() * maxY + 'px';
+}
+noBtn.addEventListener('mouseenter', moveNoButton);
+noBtn.addEventListener('touchstart', moveNoButton);
+
+// Причины, почему люблю
+const reasons = [
+  "Я люблю тебя, потому что ты — моя звездочка ✨",
+  "Потому что с тобой мне всегда уютно",
+  "Потому что ты смеёшься очень мило",
+  "Потому что ты делаешь мои дни лучше",
+  "И вообще… я тебя просто люблю ❤️"
+];
+
+// Плавающие сердечки
+function startHearts() {
+  setInterval(() => {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.innerText = '❤️';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.bottom = '0px';
+    heart.style.fontSize = 16 + Math.random() * 24 + 'px';
+    heart.style.animationDuration = 3 + Math.random() * 2 + 's';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 5000);
+  }, 250);
+}
+
+// Показ причин
+function showTexts() {
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i >= reasons.length) {
+      clearInterval(interval);
+      showPoem();
+      return;
+    }
+    const text = document.createElement('div');
+    text.className = 'text';
+    text.innerText = reasons[i];
+    text.style.left = '50%';
+    text.style.top = 30 + i * 10 + '%';
+    text.style.transform = 'translateX(-50%)';
+    document.body.appendChild(text);
+    setTimeout(() => text.remove(), 3000);
+    i++;
+  }, 2600);
+}
+
+// Стих строго по центру
+function showPoem() {
+  const poem = document.createElement('div');
+  poem.className = 'text';
+  poem.style.position = 'absolute';
+  poem.style.top = '50%';
+  poem.style.left = '50%';
+  poem.style.transform = 'translate(-50%, -50%)';
+  poem.style.fontSize = '24px';
+  poem.style.textAlign = 'center';
+  poem.innerHTML = '(тут будет стих)';
+  document.body.appendChild(poem);
+
+  setTimeout(() => {
+    poem.remove();
+    showFinalText();
+  }, 4000);
+}
+
+// Финальный текст + приглашение по центру
+function showFinalText() {
+  const container = document.createElement('div');
+  container.style.position = 'absolute';
+  container.style.top = '50%';
+  container.style.left = '50%';
+  container.style.transform = 'translate(-50%, -50%)';
+  container.style.textAlign = 'center';
+  container.style.color = 'white';
+  container.style.fontFamily = 'Arial, sans-serif';
+
+  const finalText = document.createElement('div');
+  finalText.style.fontSize = '36px';
+  finalText.style.marginBottom = '20px';
+  finalText.innerText = 'я очч тебя люблю 💖';
+  container.appendChild(finalText);
+
+  const invite = document.createElement('div');
+  invite.style.fontSize = '22px';
+  invite.innerHTML = 'А давай сегодня вечером посмотрим вместе<br><b>«Before Sunrise»</b><br>по звонку? 🤍';
+  container.appendChild(invite);
+
+  document.body.appendChild(container);
+}
+
+// Кнопка «Да»
+yesBtn.addEventListener('click', () => {
+  card.remove();
+  document.getElementById('bgMusic').play(); // запускаем музыку
+  startHearts();
+  showTexts();
+});
+</script>
+</body>
+</html>
